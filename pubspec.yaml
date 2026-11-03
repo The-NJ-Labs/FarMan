@@ -18,6 +18,8 @@ dependencies:
   permission_handler: ^11.3.1
   device_info_plus: ^9.1.0
   sqflite_common_ffi: ^2.4.5
+  nowa_runtime: ^0.2.0
+  google_sign_in: ^7.2.0
 
 dev_dependencies:
   flutter_test:
@@ -29,4 +31,29 @@ dev_dependencies:
 # flutter_launcher_icons_dark.yaml (Dark.png). See scripts/icons.ps1.
 
 flutter:
+  assets:
+    - assets/
+    - assets/icon/
+  fonts:
+    - family: ABeeZee
+      fonts:
+        - asset: assets/fonts/ABeeZee.ttf
+    - family: Abel
+      fonts:
+        - asset: assets/fonts/Abel.ttf
+    - family: Abhaya Libre
+      fonts:
+        - asset: assets/fonts/Abhaya Libre.ttf
+    - family: Acme
+      fonts:
+        - asset: assets/fonts/Acme.ttf
+    - family: Allerta
+      fonts:
+        - asset: assets/fonts/Allerta.ttf
+    - family: Alice
+      fonts:
+        - asset: assets/fonts/Alice.ttf
+    - family: AR One Sans
+      fonts:
+        - asset: assets/fonts/AR One Sans.ttf
   uses-material-design: true

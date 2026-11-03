@@ -1,0 +1,16 @@
+{
+    "version": "3.16.4",
+    "app": {
+        "name": "Farm-Management",
+        "bundleId": "com.example.FarmManagementJLTysd"
+    },
+    "main": {},
+    "permissions": [
+        {
+            "key": "android.permission.WRITE_EXTERNAL_STORAGE"
+        },
+        {
+            "key": "android.permission.READ_EXTERNAL_STORAGE"
+        }
+    ]
+}
