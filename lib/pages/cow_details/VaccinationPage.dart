@@ -56,7 +56,7 @@ class _VaccinationPageState extends State<VaccinationPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Add Vaccination Record'),
+              title: const Text('Add Vaccination Record'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -80,10 +80,10 @@ class _VaccinationPageState extends State<VaccinationPage> {
                           : 'Selected: ${selectedDate!.toIso8601String().split('T')[0]}',
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    value: selectedStatus,
-                    decoration: InputDecoration(
+                    initialValue: selectedStatus,
+                    decoration: const InputDecoration(
                       labelText: 'Status',
                       border: OutlineInputBorder(),
                     ),
@@ -104,7 +104,7 @@ class _VaccinationPageState extends State<VaccinationPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context), // Close the dialog
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -114,11 +114,11 @@ class _VaccinationPageState extends State<VaccinationPage> {
                       Navigator.pop(context); // Close the dialog
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please select a date')),
+                        const SnackBar(content: Text('Please select a date')),
                       );
                     }
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             );
@@ -137,14 +137,14 @@ class _VaccinationPageState extends State<VaccinationPage> {
         actions: [
           if (widget.role == 1) // Show the "+" button only for role 1
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               tooltip: 'Add Vaccination',
               onPressed: () => _showAddVaccinationDialog(context),
             ),
         ],
       ),
       body: _vaccinationHistory.isEmpty
-          ? Center(child: Text('No vaccination history found'))
+          ? const Center(child: Text('No vaccination history found'))
           : ListView.builder(
               itemCount: _vaccinationHistory.length,
               itemBuilder: (context, index) {

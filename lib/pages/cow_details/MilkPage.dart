@@ -53,7 +53,7 @@ class _MilkPageState extends State<MilkPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Add Milk Record'),
+              title: const Text('Add Milk Record'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -77,11 +77,11 @@ class _MilkPageState extends State<MilkPage> {
                           : 'Selected: ${selectedDate!.toIso8601String().split('T')[0]}',
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: litersController,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Liters',
                       border: OutlineInputBorder(),
                     ),
@@ -91,7 +91,7 @@ class _MilkPageState extends State<MilkPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context), // Close the dialog
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -102,11 +102,11 @@ class _MilkPageState extends State<MilkPage> {
                       Navigator.pop(context); // Close the dialog
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please select a date and enter liters')),
+                        const SnackBar(content: Text('Please select a date and enter liters')),
                       );
                     }
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             );
@@ -124,14 +124,14 @@ class _MilkPageState extends State<MilkPage> {
         backgroundColor: Colors.blue,
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             tooltip: 'Add Milk',
             onPressed: () => _showAddMilkDialog(context),
           ),
         ],
       ),
       body: _milkHistory.isEmpty
-          ? Center(child: Text('No milk records found'))
+          ? const Center(child: Text('No milk records found'))
           : ListView.builder(
               itemCount: _milkHistory.length,
               itemBuilder: (context, index) {

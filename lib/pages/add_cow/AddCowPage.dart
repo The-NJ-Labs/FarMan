@@ -34,7 +34,7 @@ class _AddCowPageState extends State<AddCowPage> {
 
   String? _validateRequired(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
-      return '${fieldName} is required';
+      return '$fieldName is required';
     }
     return null;
   }
@@ -61,7 +61,7 @@ class _AddCowPageState extends State<AddCowPage> {
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            'Error adding cow: ${e}',
+            'Error adding cow: $e',
           ),
           backgroundColor: Colors.red,
         ));
@@ -73,11 +73,11 @@ class _AddCowPageState extends State<AddCowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: SizedBox(
+        title: const SizedBox(
           width: 9999.0,
-          child: Text(
+          child: const Text(
             'Add Cow',
-            style: TextStyle(
+            style: const TextStyle(
               shadows: [],
               fontFamily: 'AR One Sans',
               fontWeight: FontWeight.w800,
@@ -340,7 +340,7 @@ class _AddCowPageState extends State<AddCowPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24.0,
               ),
               FlexSizedBox(
@@ -350,16 +350,16 @@ class _AddCowPageState extends State<AddCowPage> {
                   borderRadius: BorderRadius.circular(100.0),
                   child: ElevatedButton.icon(
                     onPressed: _submitForm,
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.save,
                     ),
-                    label: Text(
+                    label: const Text(
                       'Add Cow',
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
                       animationDuration: const Duration(milliseconds: 200),

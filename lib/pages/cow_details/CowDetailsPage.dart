@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../api/Database_helper.dart';
-import 'VaccinationPage.dart';
+import 'ChildrenPage.dart';
 import 'InseminationPage.dart';
 import 'MilkPage.dart';
-import 'ChildrenPage.dart';
+import 'VaccinationPage.dart';
 
 class CowDetailsPage extends StatefulWidget {
   final String cowName;
@@ -12,7 +13,8 @@ class CowDetailsPage extends StatefulWidget {
   final String cowGender;
   final int role; // Add role to check user permissions
 
-  CowDetailsPage({
+  // ignore: use_key_in_widget_constructors
+  const CowDetailsPage({
     required this.cowName,
     required this.cowId,
     required this.cowBreed,
@@ -32,6 +34,222 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
   double totalMilkLiters = 0.0; // Initialize totalMilkLiters
 
   @override
+  Widget build(BuildContext context) {
+    if (_cowDetails == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Cow Details - ${widget.cowId}'),
+          backgroundColor: Colors.blue,
+        ),
+        body: const Center(
+          child: Text(
+            'No details found for this cow.',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+    }
+
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset:
+            true, // Ensure the layout adjusts for the keyboard
+        appBar: AppBar(
+          title: Text('Cow Details - ${widget.cowId}'),
+          backgroundColor: Colors.blue,
+        ),
+        body: SingleChildScrollView(
+          // Make the content scrollable
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: const Text(
+                      'Cow Name',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(_cowDetails?['cow_name'] ?? widget.cowName),
+                    onTap: widget.role == 1
+                        ? () {
+                            _showEditDialog(
+                              context,
+                              'Cow Name',
+                              _cowDetails?['cow_name'] ?? widget.cowName,
+                              (newValue) async {
+                                await _dbHelper.updateCowName(
+                                    widget.cowId, newValue);
+                              },
+                            );
+                          }
+                        : null, // Disable tap for non-role 1 users
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: const Text(
+                      'Cow Breed',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(_cowDetails?['breed'] ?? widget.cowBreed),
+                    onTap: widget.role == 1
+                        ? () {
+                            _showEditDialog(
+                              context,
+                              'Cow Breed',
+                              _cowDetails?['breed'] ?? widget.cowBreed,
+                              (newValue) async {
+                                await _dbHelper.updateCowBreed(
+                                    widget.cowId, newValue);
+                              },
+                            );
+                          }
+                        : null, // Disable tap for non-role 1 users
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: const Text(
+                      'Gender',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(_cowDetails?['Gender'] ??
+                        widget.cowGender ??
+                        'Unknown'),
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: Text(
+                      'Last Vaccinated: ${_cowDetails?['latestVaccinationDate'] ?? 'No vaccination history'}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: const Text('View vaccination history'),
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VaccinationPage(
+                            cowId: widget.cowId,
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                      // Refresh data when returning from the VaccinationPage
+                      _fetchCowDetails();
+                    },
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: Text(
+                      'Last Inseminated: ${_cowDetails?['latestInseminationDate'] ?? 'No Insemination history'}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: const Text('View Insemination history'),
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InseminationPage(
+                            cowId: widget.cowId,
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                      // Refresh data when returning from the InseminationPage
+                      _fetchCowDetails();
+                    },
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: Text(
+                      'Milk: ${_cowDetails?['totalMilkLiters']?.toStringAsFixed(2) ?? '0.00'} liters',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: const Text('View milk records'),
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MilkPage(
+                            cowId: widget.cowId,
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                      // Refresh data when returning from the MilkPage
+                      _fetchCowDetails();
+                    },
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: const Text(
+                      'Parents',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Parent 1: ${_cowDetails?['parent1'] ?? 'Not available'}\n'
+                      'Parent 2: ${_cowDetails?['parent2'] ?? 'Not available'}',
+                    ),
+                    onTap: widget.role == 1
+                        ? () {
+                            _showEditParentsDialog(context);
+                          }
+                        : null, // Disable tap for non-role 1 users
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: const Text(
+                      'Children',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: const Text('View children'), // Updated subtitle text
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChildrenPage(
+                            cowId: widget.cowId,
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                      // Refresh data when returning from the ChildrenPage
+                      _fetchCowDetails();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
   void initState() {
     super.initState();
     _fetchCowDetails(); // Fetch cow details when the page loads
@@ -40,7 +258,8 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
   Future<void> _fetchCowDetails() async {
     try {
       final cows = await _dbHelper.getAllCows();
-      final cow = cows.firstWhere((c) => c['cow_id'] == widget.cowId, orElse: () => {});
+      final cow =
+          cows.firstWhere((c) => c['cow_id'] == widget.cowId, orElse: () => {});
       String? latestVaccinationDate;
       String? latestInseminationDate;
       double totalMilkLiters = 0.0;
@@ -49,7 +268,8 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
 
       if (cow != null) {
         // Fetch vaccination records for the cow
-        final vaccinationRecords = await _dbHelper.getVaccinationRecords(widget.cowId);
+        final vaccinationRecords =
+            await _dbHelper.getVaccinationRecords(widget.cowId);
 
         // Find the most recent vaccination date
         if (vaccinationRecords.isNotEmpty) {
@@ -61,12 +281,13 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
         }
 
         // Fetch Insemination records for the cow
-        final InseminationRecords = await _dbHelper.getInseminationRecords(widget.cowId);
+        final InseminationRecords =
+            await _dbHelper.getInseminationRecords(widget.cowId);
 
         // Find the most recent Insemination date
         if (InseminationRecords.isNotEmpty) {
-          latestInseminationDate = InseminationRecords
-              .map((record) => DateTime.parse(record['date']))
+          latestInseminationDate = InseminationRecords.map(
+                  (record) => DateTime.parse(record['date']))
               .reduce((a, b) => a.isAfter(b) ? a : b)
               .toIso8601String()
               .split('T')[0]; // Format as YYYY-MM-DD
@@ -84,7 +305,8 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
         }
 
         // Fetch parent details from FamilyTreeTable
-        final familyTreeRecord = await _dbHelper.getFamilyTreeRecord(widget.cowId);
+        final familyTreeRecord =
+            await _dbHelper.getFamilyTreeRecord(widget.cowId);
         if (familyTreeRecord != null) {
           parent1 = familyTreeRecord['parent1'];
           parent2 = familyTreeRecord['parent2'];
@@ -133,15 +355,19 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
     }
   }
 
-  void _showEditDialog(BuildContext context, String field, String currentValue, Function(String) onSave) {
-    final TextEditingController _controller = TextEditingController(text: currentValue);
+  void _showEditDialog(BuildContext context, String field, String currentValue,
+      Function(String) onSave) {
+    final TextEditingController _controller =
+        TextEditingController(text: currentValue);
 
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing the dialog by tapping outside
+      barrierDismissible:
+          false, // Prevent dismissing the dialog by tapping outside
       builder: (context) {
         return Dialog(
-          insetPadding: const EdgeInsets.all(16.0), // Add padding to prevent overflow
+          insetPadding:
+              const EdgeInsets.all(16.0), // Add padding to prevent overflow
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -150,14 +376,15 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
                 children: [
                   Text(
                     'Edit $field',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _controller,
                     decoration: InputDecoration(
                       labelText: 'New $field',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -165,8 +392,9 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: () => Navigator.pop(context), // Close the dialog
-                        child: Text('Cancel'),
+                        onPressed: () =>
+                            Navigator.pop(context), // Close the dialog
+                        child: const Text('Cancel'),
                       ),
                       ElevatedButton(
                         onPressed: () async {
@@ -175,12 +403,14 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
                             await onSave(newValue); // Save the new value
                             Navigator.pop(context); // Close the dialog
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('$field updated successfully!')),
+                              SnackBar(
+                                  content:
+                                      Text('$field updated successfully!')),
                             );
                             _fetchCowDetails(); // Reload cow details
                           }
                         },
-                        child: Text('Save'),
+                        child: const Text('Save'),
                       ),
                     ],
                   ),
@@ -199,24 +429,25 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
 
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing the dialog by tapping outside
+      barrierDismissible:
+          false, // Prevent dismissing the dialog by tapping outside
       builder: (context) {
         return AlertDialog(
-          title: Text('Edit Parents'),
+          title: const Text('Edit Parents'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: parent1Controller,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Parent 1 Cow ID',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: parent2Controller,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Parent 2 Cow ID',
                   border: OutlineInputBorder(),
                 ),
@@ -226,7 +457,7 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context), // Close the dialog
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -235,14 +466,18 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
 
                 if (parent1.isEmpty || parent2.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Both Parent 1 and Parent 2 must be provided')),
+                    const SnackBar(
+                        content: Text(
+                            'Both Parent 1 and Parent 2 must be provided')),
                   );
                   return;
                 }
 
                 if (parent1 == parent2) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Parent 1 and Parent 2 cannot be the same')),
+                    const SnackBar(
+                        content:
+                            Text('Parent 1 and Parent 2 cannot be the same')),
                   );
                   return;
                 }
@@ -258,7 +493,7 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
 
                   Navigator.pop(context); // Close the dialog
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Parents updated successfully!')),
+                    const SnackBar(content: Text('Parents updated successfully!')),
                   );
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -266,221 +501,11 @@ class _CowDetailsPageState extends State<CowDetailsPage> {
                   );
                 }
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_cowDetails == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Cow Details - ${widget.cowId}'),
-          backgroundColor: Colors.blue,
-        ),
-        body: Center(
-          child: Text(
-            'No details found for this cow.',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
-    }
-
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true, // Ensure the layout adjusts for the keyboard
-        appBar: AppBar(
-          title: Text('Cow Details - ${widget.cowId}'),
-          backgroundColor: Colors.blue,
-        ),
-        body: SingleChildScrollView( // Make the content scrollable
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Cow Name',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(_cowDetails?['cow_name'] ?? widget.cowName),
-                    onTap: widget.role == 1
-                        ? () {
-                            _showEditDialog(
-                              context,
-                              'Cow Name',
-                              _cowDetails?['cow_name'] ?? widget.cowName,
-                              (newValue) async {
-                                await _dbHelper.updateCowName(widget.cowId, newValue);
-                              },
-                            );
-                          }
-                        : null, // Disable tap for non-role 1 users
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Cow Breed',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(_cowDetails?['breed'] ?? widget.cowBreed),
-                    onTap: widget.role == 1
-                        ? () {
-                            _showEditDialog(
-                              context,
-                              'Cow Breed',
-                              _cowDetails?['breed'] ?? widget.cowBreed,
-                              (newValue) async {
-                                await _dbHelper.updateCowBreed(widget.cowId, newValue);
-                              },
-                            );
-                          }
-                        : null, // Disable tap for non-role 1 users
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Gender',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(_cowDetails?['Gender'] ?? widget.cowGender ?? 'Unknown'),
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Last Vaccinated: ${_cowDetails?['latestVaccinationDate'] ?? 'No vaccination history'}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text('View vaccination history'),
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VaccinationPage(
-                            cowId: widget.cowId,
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                      // Refresh data when returning from the VaccinationPage
-                      _fetchCowDetails();
-                    },
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Last Inseminated: ${_cowDetails?['latestInseminationDate'] ?? 'No Insemination history'}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: const Text('View Insemination history'),
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => InseminationPage(
-                            cowId: widget.cowId,
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                      // Refresh data when returning from the InseminationPage
-                      _fetchCowDetails();
-                    },
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Milk: ${_cowDetails?['totalMilkLiters']?.toStringAsFixed(2) ?? '0.00'} liters',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text('View milk records'),
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MilkPage(
-                            cowId: widget.cowId,
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                      // Refresh data when returning from the MilkPage
-                      _fetchCowDetails();
-                    },
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Parents',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      'Parent 1: ${_cowDetails?['parent1'] ?? 'Not available'}\n'
-                      'Parent 2: ${_cowDetails?['parent2'] ?? 'Not available'}',
-                    ),
-                    onTap: widget.role == 1
-                        ? () {
-                            _showEditParentsDialog(context);
-                          }
-                        : null, // Disable tap for non-role 1 users
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      'Children',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text('View children'), // Updated subtitle text
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChildrenPage(
-                            cowId: widget.cowId,
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                      // Refresh data when returning from the ChildrenPage
-                      _fetchCowDetails();
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

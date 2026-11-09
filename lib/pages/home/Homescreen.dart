@@ -245,7 +245,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                     borderRadius: BorderRadius.circular(12.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 8.0,
                         offset: const Offset(0.0, 2.0),
                       )
@@ -376,18 +376,18 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
-          const BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
               icon: Icon(
                 Icons.home_rounded,
               ),
               label: 'Home'),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: Icon(
                 Icons.calculate_sharp,
               ),
               label: 'Money'),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: Icon(
                 Icons.import_export_outlined,
               ),

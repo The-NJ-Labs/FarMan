@@ -73,7 +73,7 @@ class _ChildrenPageState extends State<ChildrenPage> {
     final newCowId = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddCowPage(),
+        builder: (context) => const AddCowPage(),
       ),
     );
     if (newCowId != null) {
@@ -91,14 +91,14 @@ class _ChildrenPageState extends State<ChildrenPage> {
         actions: [
           if (widget.role == 1)
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               tooltip: 'Add Child',
               onPressed: _navigateToAddCowPage,
             ),
         ],
       ),
       body: _children.isEmpty
-          ? Center(child: Text('No children found'))
+          ? const Center(child: Text('No children found'))
           : ListView.builder(
               itemCount: _children.length,
               itemBuilder: (context, index) {
@@ -113,11 +113,11 @@ class _ChildrenPageState extends State<ChildrenPage> {
                     child: ListTile(
                       title: Text(
                         child['name'] ?? 'Unknown', // Display the child's name
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       subtitle: Text('ID: ${child['id']}'), // Display the child ID
-                      leading: Icon(Icons.pets, color: Colors.blue), // Add an icon
-                      trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                      leading: const Icon(Icons.pets, color: Colors.blue), // Add an icon
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
                     ),
                   ),
                 );
