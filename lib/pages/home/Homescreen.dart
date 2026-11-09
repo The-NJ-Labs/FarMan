@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import '../import_export/ImportExportPage.dart';
-import '../add_cow/AddCowPage.dart';
-import '../cow_details/CowDetailsPage.dart';
-import '../../api/Database_helper.dart';
-import '../../models/cow_model.dart';
+import 'package:FarMan/api/Database_helper.dart';
+import 'package:FarMan/models/cow_model.dart';
 import 'package:nowa_runtime/nowa_runtime.dart';
+import 'package:FarMan/pages/add_cow/AddCowPage.dart';
+import 'package:FarMan/pages/cow_details/CowDetailsPage.dart';
+import 'package:FarMan/pages/import_export/ImportExportPage.dart';
 
+@NowaGenerated()
 class MyHomeScreen extends StatefulWidget {
-  final int role; // Add a role parameter
+  @NowaGenerated({'loader': 'auto-constructor'})
+  const MyHomeScreen({super.key, this.role = 1});
 
-  MyHomeScreen({required this.role}); // Constructor to accept role
+  final int role;
 
   @override
-  _MyHomeScreenState createState() => _MyHomeScreenState();
+  _MyHomeScreenState createState() {
+    return _MyHomeScreenState();
+  }
 }
 
 @NowaGenerated()
@@ -26,7 +30,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
   List<Cow> _filteredCows = [];
 
   bool _isLoading = true;
-
+  
   @override
   void initState() {
     super.initState();
@@ -83,13 +87,13 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
 
   Future<void> _navigateToAddCow() async {
     final result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AddCowPage()));
+        context, MaterialPageRoute(builder: (context) => const AddCowPage()));
     if (result == true) {
       await _fetchCows();
     }
   }
 
-  Future<void> _navigateToCowDetails(Cow cow) async {
+  Future<void> _navigateToCowDetails(BuildContext context, Cow cow) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
@@ -103,14 +107,14 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     await _fetchCows();
   }
 
-  Widget _buildCowCard(Cow cow) {
+  Widget _buildCowCard(BuildContext context, Cow cow) {
     return Card(
       elevation: 4.0,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: InkWell(
         borderRadius: BorderRadius.circular(12.0),
-        onTap: () => _navigateToCowDetails(cow),
+        onTap: () => _navigateToCowDetails(context, cow),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -210,17 +214,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         elevation: 0.0,
-        actions: [
-          if (widget.role == 1)
-            IconButton(
-              icon: const Icon(
-                Icons.add,
-              ),
-              tooltip: 'Add Cow',
-              onPressed: _navigateToAddCow,
-            )
-        ],
-        title: SizedBox(
+        title: const SizedBox(
           width: 9999.0,
           child: Opacity(
             opacity: 0.9,
@@ -241,11 +235,8 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: const BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(24.0),
-                    bottomRight: Radius.circular(24.0))),
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(0.0)),
             child: Column(
               children: [
                 Container(
@@ -307,6 +298,8 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                           fontStyle: FontStyle.italic,
                         ),
                       )
+                    else
+                      const SizedBox.shrink()
                   ],
                 )
               ],
@@ -376,7 +369,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           itemCount: _filteredCows.length,
                           itemBuilder: (context, index) =>
-                              _buildCowCard(_filteredCows[index]),
+                              _buildCowCard(context, _filteredCows[index]),
                         ),
                       ),
           )
@@ -386,7 +379,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
         items: [
           const BottomNavigationBarItem(
               icon: Icon(
-                Icons.home,
+                Icons.home_rounded,
               ),
               label: 'Home'),
           const BottomNavigationBarItem(
@@ -417,12 +410,16 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _navigateToAddCow();
-        },
-        child: const Icon(
-          IconData(57415, fontFamily: 'MaterialIcons'),
+      floatingActionButton: ClipRRect(
+        borderRadius: BorderRadius.circular(28.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            _navigateToAddCow();
+          },
+          child: const Icon(
+            IconData(57415, fontFamily: 'MaterialIcons'),
+            applyTextScaling: false,
+          ),
         ),
       ),
     );

@@ -26,11 +26,11 @@ class _AddCowPageState extends State<AddCowPage> {
 
   DateTime? _dob;
 
-  TextEditingController _cowNameController = TextEditingController();
+  TextEditingController cowNameController = TextEditingController();
 
-  TextEditingController _cowIdController = TextEditingController();
+  TextEditingController cowIdController = TextEditingController();
 
-  TextEditingController _breedController = TextEditingController();
+  TextEditingController breedController = TextEditingController();
 
   String? _validateRequired(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
@@ -43,10 +43,10 @@ class _AddCowPageState extends State<AddCowPage> {
     if (_formKey.currentState!.validate()) {
       try {
         final cow = Cow(
-          id: _cowIdController.text.trim(),
+          id: cowIdController.text.trim(),
           isAlive: _isAlive,
-          name: _cowNameController.text.trim(),
-          breed: _breedController.text.trim(),
+          name: cowNameController.text.trim(),
+          breed: breedController.text.trim(),
           isFemale: _isFemale,
         );
         final dbHelper = InventoryDatabaseHelper();
@@ -73,15 +73,21 @@ class _AddCowPageState extends State<AddCowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Add Cow',
-          style: TextStyle(
-            shadows: [],
-            fontFamily: 'AR One Sans',
-            fontWeight: FontWeight.w800,
+        title: SizedBox(
+          width: 9999.0,
+          child: Text(
+            'Add Cow',
+            style: TextStyle(
+              shadows: [],
+              fontFamily: 'AR One Sans',
+              fontWeight: FontWeight.w800,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
         backgroundColor: Colors.blue,
+        centerTitle: true,
+        titleSpacing: 1.6,
       ),
       body: Form(
         key: _formKey,
@@ -90,231 +96,247 @@ class _AddCowPageState extends State<AddCowPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Card(
-                elevation: 2.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Cow Information',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.blue,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Cow Name *',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.pets_rounded,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(0.0),
+                child: Card(
+                  elevation: 2.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Cow Information',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.blue,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        validator: (value) =>
-                            _validateRequired(value, 'Cow Name'),
-                        textCapitalization: TextCapitalization.words,
-                        controller: _cowNameController,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Card(
-                        color: Colors.grey[50],
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.date_range_rounded,
-                                    color: Colors.orange,
-                                  ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  Text(
-                                    _dob == null
-                                        ? 'Date of Birth'
-                                        : 'DOB: ${_dob!.toIso8601String().split('T')[0]}',
-                                    style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  final pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: _dob ?? DateTime.now(),
-                                    firstDate: DateTime(1980),
-                                    lastDate: DateTime.now(),
-                                  );
-                                  if (pickedDate != null) {
-                                    setState(() {
-                                      _dob = pickedDate;
-                                    });
-                                  }
-                                },
-                                child: const Text(
-                                  'Select',
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Cow Name *',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(
+                              Icons.pets_rounded,
+                            ),
+                          ),
+                          validator: (value) =>
+                              _validateRequired(value, 'Cow Name'),
+                          textCapitalization: TextCapitalization.words,
+                          controller: cowNameController,
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Card(
+                          color: Colors.grey[50],
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.date_range_rounded,
+                                      color: Colors.orange,
+                                    ),
+                                    const SizedBox(
+                                      width: 8.0,
+                                    ),
+                                    Text(
+                                      _dob == null
+                                          ? 'Date of Birth'
+                                          : 'DOB: ${_dob!.toIso8601String().split('T')[0]}',
+                                      style: const TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Cow ID *',
-                          hintText: 'MAF-X-XX-XX-XXX',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.tag,
-                          ),
-                        ),
-                        validator: (value) =>
-                            _validateRequired(value, 'Cow ID'),
-                        controller: _cowIdController,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Breed *',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.category,
-                          ),
-                        ),
-                        validator: (value) => _validateRequired(value, 'Breed'),
-                        textCapitalization: TextCapitalization.words,
-                        controller: _breedController,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Card(
-                        color: Colors.grey[50],
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.health_and_safety,
-                                    color: Colors.green,
+                                TextButton(
+                                  onPressed: () async {
+                                    final pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: _dob ?? DateTime.now(),
+                                      firstDate: DateTime(1980),
+                                      lastDate: DateTime.now(),
+                                    );
+                                    if (pickedDate != null) {
+                                      setState(() {
+                                        _dob = pickedDate;
+                                      });
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Select',
                                   ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  Text(
-                                    'Status: ${_isAlive ? 'Alive' : 'Deceased'}',
-                                    style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Cow ID *',
+                            hintText: 'MAF-X-XX-XX-XXX',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(
+                              Icons.tag,
+                            ),
+                          ),
+                          validator: (value) =>
+                              _validateRequired(value, 'Cow ID'),
+                          controller: cowIdController,
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(0.0),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Breed *',
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(
+                                Icons.category,
                               ),
-                              Switch(
-                                value: _isAlive,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _isAlive = value;
-                                  });
-                                },
-                                activeThumbColor: Colors.green,
-                              )
-                            ],
+                            ),
+                            validator: (value) =>
+                                _validateRequired(value, 'Breed'),
+                            textCapitalization: TextCapitalization.words,
+                            controller: breedController,
                           ),
                         ),
-                      ),
-                      Card(
-                        color: Colors.grey[50],
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(25.0),
+                          child: Card(
+                            color: Colors.grey[50],
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Stack(
-                                    alignment: Alignment.center,
+                                  Row(
                                     children: [
-                                      if (_isFemale)
-                                        Icon(
-                                          Icons.female,
-                                          color: const Color.fromARGB(
-                                            255,
-                                            187,
-                                            102,
-                                            215,
-                                          ),
-                                        )
-                                      else
-                                        Icon(
-                                          Icons.male,
-                                          color: const Color.fromARGB(
-                                            255,
-                                            40,
-                                            173,
-                                            255,
-                                          ),
-                                        )
+                                      const Icon(
+                                        Icons.health_and_safety,
+                                        color: Colors.green,
+                                      ),
+                                      const SizedBox(
+                                        width: 8.0,
+                                      ),
+                                      Text(
+                                        'Status: ${_isAlive ? 'Alive' : 'Deceased'}',
+                                        style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w500),
+                                      )
                                     ],
                                   ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  Text(
-                                    'Gender: ${_isFemale ? 'Female' : 'Male'}',
-                                    style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w500),
+                                  Switch(
+                                    value: _isAlive,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _isAlive = value;
+                                      });
+                                    },
+                                    activeThumbColor: Colors.green,
                                   )
                                 ],
                               ),
-                              Switch(
-                                value: _isFemale,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _isFemale = value;
-                                  });
-                                },
-                                activeThumbColor: const Color.fromARGB(
-                                  255,
-                                  187,
-                                  102,
-                                  215,
-                                ),
-                                inactiveThumbColor: const Color.fromARGB(
-                                  255,
-                                  40,
-                                  173,
-                                  255,
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                         ),
-                      )
-                    ],
+                        ClipRRect(
+                          clipBehavior: Clip.antiAlias,
+                          borderRadius: BorderRadius.circular(25.0),
+                          child: Card(
+                            color: Colors.grey[50],
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          if (_isFemale)
+                                            const Icon(
+                                              Icons.female,
+                                              color: Color.fromARGB(
+                                                255,
+                                                187,
+                                                102,
+                                                215,
+                                              ),
+                                            )
+                                          else
+                                            const Icon(
+                                              Icons.male,
+                                              color: Color.fromARGB(
+                                                255,
+                                                40,
+                                                173,
+                                                255,
+                                              ),
+                                            )
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        width: 8.0,
+                                      ),
+                                      Text(
+                                        'Gender: ${_isFemale ? 'Female' : 'Male'}',
+                                        style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                  Switch(
+                                    value: _isFemale,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _isFemale = value;
+                                      });
+                                    },
+                                    activeThumbColor: const Color.fromARGB(
+                                      255,
+                                      187,
+                                      102,
+                                      215,
+                                    ),
+                                    inactiveThumbColor: const Color.fromARGB(
+                                      255,
+                                      40,
+                                      173,
+                                      255,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -340,7 +362,9 @@ class _AddCowPageState extends State<AddCowPage> {
                       padding: EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
+                      animationDuration: const Duration(milliseconds: 200),
                     ),
+                    onHover: (value) {},
                   ),
                 ),
               )
@@ -353,9 +377,9 @@ class _AddCowPageState extends State<AddCowPage> {
 
   @override
   void dispose() {
-    _cowNameController.dispose();
-    _breedController.dispose();
-    _cowIdController.dispose();
+    cowNameController.dispose();
+    breedController.dispose();
+    cowIdController.dispose();
     _cowDoBController.dispose();
     super.dispose();
   }

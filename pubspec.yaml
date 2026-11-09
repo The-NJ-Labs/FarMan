@@ -20,6 +20,8 @@ dependencies:
   sqflite_common_ffi: ^2.4.5
   nowa_runtime: ^0.2.0
   google_sign_in: ^7.2.0
+  animations: ^2.0.11
+  page_navigation_transition: ^1.1.0
 
 dev_dependencies:
   flutter_test:

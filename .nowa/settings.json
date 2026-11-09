@@ -12,5 +12,6 @@
         {
             "key": "android.permission.READ_EXTERNAL_STORAGE"
         }
-    ]
+    ],
+    "data_panel_tab": "Firestore"
 }
